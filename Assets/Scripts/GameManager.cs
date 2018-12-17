@@ -68,13 +68,14 @@ public class GameManager : MonoBehaviour
         {
             if (!exitCanvas.activeInHierarchy)
             {
-                blurry.SetActive(true);
                 exitCanvas.SetActive(true);
+                blurry.SetActive(true);
             }
             else
             {
-                blurry.SetActive(false);
                 exitCanvas.SetActive(false);
+                if (!openCanvas.activeInHierarchy && !selectCanvas.activeInHierarchy)
+                    blurry.SetActive(false);
             }
         }
     }
