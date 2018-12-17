@@ -1,0 +1,36 @@
+﻿using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+
+    private CharacterController playerChar;
+    
+    private float moveHoz;
+    private float moveVer;
+	// Use this for initialization
+	void Start() 
+    {
+		playerChar = GetComponent<CharacterController>();
+	}
+
+    void Update()
+    {
+        if (GameManager.Instance.currSelectBall == null && !GameManager.Instance.exitCanvas.activeInHierarchy)
+        {
+            moveHoz = Input.GetAxis("Horizontal");
+            moveVer = Input.GetAxis("Vertical");
+
+            float mouseX = Input.GetAxisRaw("Mouse X");
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, 
+                                                transform.eulerAngles.y + mouseX * GameManager.Instance.turnSpeedY, 
+                                                transform.eulerAngles.z);
+        }
+    }
+    // Update is called once per frame
+    void FixedUpdate()
+    {
+		playerChar.Move(Vector3.down * GameManager.Instance.gravity); // make character Grounded (and never jump again!)
+        playerChar.Move(GameManager.Instance.moveSpeed * moveHoz * transform.right);
+        playerChar.Move(GameManager.Instance.moveSpeed * moveVer * transform.forward);
+	}
+}
