@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -34,9 +36,16 @@ public class GameManager : MonoBehaviour
     public GameObject selectCanvas;
     public PickedUpBall PickedUpBallScript;
     public GameObject exitCanvas;
+    public GameObject openCanvas;
     [HideInInspector]
     public GameObject currSelectBall;
+    [HideInInspector]
+    public string insideBall;
 
+    [Header("Add Things")]
+    public string[] possibleThings;
+    [Range(0f,1f)]
+    public float[] possibleThingsChance;
     #endregion
     void Awake()
     {
@@ -49,7 +58,6 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
         #endregion
         StartCoroutine("Addball");
         Cursor.visible = false;
@@ -57,34 +65,51 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (currSelectBall != null)
-        {
-            blurry.SetActive(true);
-            selectCanvas.SetActive(true);
-            crosshairCanvas.SetActive(false);
-            PickedUpBallScript.enabled = true;
-        }
-
         if (Input.GetButtonDown("Cancel"))
         {
             if (!exitCanvas.activeInHierarchy)
+            {
+                blurry.SetActive(true);
                 exitCanvas.SetActive(true);
+            }
             else
+            {
+                blurry.SetActive(false);
                 exitCanvas.SetActive(false);
+            }
         }
     }
+
     IEnumerator Addball()
     {
         while (ballCount < maxBallCount)
         {
             GameObject newBall = Instantiate(theBall, new Vector3(Random.Range(-4f,4f),4,Random.Range(-4f,4f)), Quaternion.identity, ballKeeper);
             ballCount++;
+            #region random item
+            for (int i = 0; i < possibleThingsChance.Length; i++)
+            {
+                if (Random.value <= possibleThingsChance[i])
+                {
+                    newBall.GetComponent<BallSelection>().inside = possibleThings[i];
+                    break;
+                }
+            }
+            #endregion
             newBall.GetComponent<Renderer>().material.color = new Color(Random.Range(0f,1f),Random.Range(0f,1f),Random.Range(0f,1f));
             if (ballCount < maxBallCount / 2)
                 yield return null;
             else
                 yield return new WaitForSeconds(2f);
         }
+    }
+
+    public void SelectionOn()
+    {
+        blurry.SetActive(true);
+        selectCanvas.SetActive(true);
+        crosshairCanvas.SetActive(false);
+        PickedUpBallScript.enabled = true;
     }
 
     public void BtnReselect()
@@ -95,6 +120,12 @@ public class GameManager : MonoBehaviour
         crosshairCanvas.SetActive(true);
     }
 
+    public void BtnOpen()
+    {
+        selectCanvas.SetActive(false);
+        insideBall = currSelectBall.GetComponent<BallSelection>().inside;
+    }
+
     public void BtnExitNo()
     {
         exitCanvas.SetActive(false);
@@ -102,7 +133,16 @@ public class GameManager : MonoBehaviour
 
     public void BtnExitYes()
     {
-        Debug.Log("Exit!");
         Application.Quit();
+        Debug.Log("Exit!");
+    }
+
+    public void BtnTryYes()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    public void BtnTryNo()
+    {
+        exitCanvas.SetActive(true);
     }
 }

@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.Instance.currSelectBall == null && !GameManager.Instance.exitCanvas.activeInHierarchy)
+        if (GameManager.Instance.currSelectBall == null && !GameManager.Instance.exitCanvas.activeInHierarchy && GameManager.Instance.insideBall == "")
         {
             moveHoz = Input.GetAxis("Horizontal");
             moveVer = Input.GetAxis("Vertical");

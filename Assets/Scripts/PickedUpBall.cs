@@ -3,6 +3,7 @@
 public class PickedUpBall : MonoBehaviour
 {
     private Vector3 velocity;
+    private Vector3 velocity2;
     private Vector3 backupPosition;
     private Rigidbody select;
     private void OnEnable()
@@ -18,17 +19,19 @@ public class PickedUpBall : MonoBehaviour
     {
         if (GameManager.Instance.currSelectBall != null)
         {
-            select.position = Vector3.SmoothDamp(select.position, transform.TransformPoint(Vector3.forward * 2), ref velocity, GameManager.Instance.pickupTransitionTime);
-
+            if (GameManager.Instance.insideBall == "")
+                select.position = Vector3.SmoothDamp(select.position, transform.TransformPoint(Vector3.forward * 2), ref velocity, GameManager.Instance.pickupTransitionTime);
+            else
+            {
+                Destroy(select.gameObject);
+                GameManager.Instance.openCanvas.SetActive(true);
+                enabled = false;
+            }     
         }
         else if (select.position != backupPosition)
-        {
             select.position = Vector3.SmoothDamp(select.position, backupPosition, ref velocity, GameManager.Instance.pickupTransitionTime);
-        }
         else
-        {
             enabled = false;
-        }
 
     }
 

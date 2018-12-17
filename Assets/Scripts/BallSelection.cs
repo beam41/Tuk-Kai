@@ -3,6 +3,7 @@
 public class BallSelection : MonoBehaviour
 {
     public bool hitting;
+    public string inside;
 
     private Outline outliner;
 

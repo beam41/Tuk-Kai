@@ -5,7 +5,8 @@ public class PlayerCameraController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-        if (GameManager.Instance.currSelectBall == null && !GameManager.Instance.exitCanvas.activeInHierarchy)
+        
+        if (GameManager.Instance.currSelectBall == null && !GameManager.Instance.exitCanvas.activeInHierarchy && GameManager.Instance.insideBall == "")
         {
 		    float mouseY = Input.GetAxisRaw("Mouse Y");
             transform.localEulerAngles = new Vector3(ClamperX(mouseY * GameManager.Instance.turnSpeedX), 0, 0);
@@ -20,6 +21,7 @@ public class PlayerCameraController : MonoBehaviour
                     if (Input.GetButton("Fire1"))
                     {
                         GameManager.Instance.currSelectBall = hit.transform.gameObject;
+                        GameManager.Instance.SelectionOn();
                     }
                 }
             }
