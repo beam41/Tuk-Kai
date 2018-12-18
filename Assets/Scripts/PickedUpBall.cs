@@ -17,8 +17,16 @@ public class PickedUpBall : MonoBehaviour
 
     void Update()
     {
+        
         if (GameManager.Instance.currSelectBall != null)
         {
+            if (GameManager.Instance.currSelectBall != select.gameObject)
+            {
+                select.GetComponent<SphereCollider>().enabled = true;
+                select.GetComponent<Rigidbody>().isKinematic = false;
+                select.GetComponent<Rigidbody>().detectCollisions = true;
+                OnEnable();
+            }
             if (GameManager.Instance.insideBall == "")
                 select.position = Vector3.SmoothDamp(select.position, transform.TransformPoint(Vector3.forward * 2), ref velocity, GameManager.Instance.pickupTransitionTime);
             else
@@ -29,16 +37,13 @@ public class PickedUpBall : MonoBehaviour
             }     
         }
         else if (select.position != backupPosition)
-            select.position = Vector3.SmoothDamp(select.position, backupPosition, ref velocity, GameManager.Instance.pickupTransitionTime);
+            select.position = Vector3.SmoothDamp(select.position, backupPosition, ref velocity2, GameManager.Instance.pickupTransitionTime);
         else
+        {
+            select.GetComponent<SphereCollider>().enabled = true;
+            select.GetComponent<Rigidbody>().isKinematic = false;
+            select.GetComponent<Rigidbody>().detectCollisions = true;
             enabled = false;
-
-    }
-
-    private void OnDisable()
-    {
-        select.GetComponent<SphereCollider>().enabled = true;
-        select.GetComponent<Rigidbody>().isKinematic = false;
-        select.GetComponent<Rigidbody>().detectCollisions = true;
+        }
     }
 }
