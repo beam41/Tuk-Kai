@@ -8,9 +8,15 @@ public class PlayerCameraController : MonoBehaviour
         
         if (GameManager.Instance.currSelectBall == null && !GameManager.Instance.exitCanvas.activeInHierarchy && GameManager.Instance.insideBall == "")
         {
+
+            #if UNITY_STANDALONE || UNITY_WEBGL
+
 		    float mouseY = Input.GetAxisRaw("Mouse Y");
             transform.localEulerAngles = new Vector3(ClamperX(mouseY * GameManager.Instance.turnSpeedX), 0, 0);
-
+            #elif UNITY_ANDROID || UNITY_IOS
+            transform.localEulerAngles = new Vector3(ClamperX(GameTouchManager.Instance.movementY * GameManager.Instance.turnSpeedX), 0, 0);
+            GameTouchManager.Instance.movementY = 0;
+            #endif
             #region Raycast
             RaycastHit hit;
             if (Physics.Raycast(transform.position, transform.forward, out hit) && GameManager.Instance.currSelectBall == null)
@@ -18,11 +24,20 @@ public class PlayerCameraController : MonoBehaviour
                 if (hit.transform.CompareTag("Ball"))
                 {
                     hit.transform.GetComponent<BallSelection>().hitting = true;
-                    if (Input.GetButton("Fire1"))
+                    #if !(UNITY_ANDROID || UNITY_IOS)
+                    if (Input.GetButtonDown("Fire1"))
                     {
                         GameManager.Instance.currSelectBall = hit.transform.gameObject;
                         GameManager.Instance.SelectionOn();
                     }
+                    #elif UNITY_ANDROID || UNITY_IOS
+                    if (GameTouchManager.Instance.callPickup)
+                    {
+                        GameManager.Instance.currSelectBall = hit.transform.gameObject;
+                        GameManager.Instance.SelectionOn();
+                        GameTouchManager.Instance.callPickup = false;
+                    }
+                    #endif
                 }
             }
             #endregion
