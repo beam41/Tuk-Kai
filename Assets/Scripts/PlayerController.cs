@@ -12,9 +12,6 @@ public class PlayerController : MonoBehaviour
 	// Use this for initialization
 	void Start() 
     {
-        #if (UNITY_ANDROID || UNITY_IOS)
-        transform.position = new Vector3(transform.position.x, transform.position.y, -5.18f);
-        #endif
 		playerChar = GetComponent<CharacterController>();
 	}
 
@@ -40,6 +37,13 @@ public class PlayerController : MonoBehaviour
             GameTouchManager.Instance.movementX = 0;
             #endif
         }
+        #if !(UNITY_ANDROID || UNITY_IOS)
+        else
+        {
+            moveHoz = 0;
+            moveVer = 0;
+        }
+        #endif
     }
     // Update is called once per frame
     void FixedUpdate()

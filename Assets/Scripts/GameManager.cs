@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -55,9 +54,6 @@ public class GameManager : MonoBehaviour
         }
         #endregion
         StartCoroutine("Addball");
-        #if !(UNITY_ANDROID || UNITY_IOS)
-        Cursor.visible = false;
-        #endif
     }
 
     #if !(UNITY_ANDROID || UNITY_IOS)
@@ -69,6 +65,7 @@ public class GameManager : MonoBehaviour
         {
             if (!exitCanvas.activeInHierarchy)
             {
+                crosshairCanvas.SetActive(false);
                 exitCanvas.SetActive(true);
                 blurry.SetActive(true);
             }
@@ -125,12 +122,14 @@ public class GameManager : MonoBehaviour
 
     public void BtnOpen()
     {
+
         selectCanvas.SetActive(false);
         insideBall = currSelectBall.GetComponent<BallSelection>().inside;
     }
 
     public void BtnExitNo()
     {
+        crosshairCanvas.SetActive(true);
         exitCanvas.SetActive(false);
         if (!openCanvas.activeInHierarchy && !selectCanvas.activeInHierarchy)
             blurry.SetActive(false);
@@ -144,7 +143,9 @@ public class GameManager : MonoBehaviour
 
     public void BtnTryYes()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        openCanvas.SetActive(false);
+        insideBall = "";
+        BtnReselect();
     }
     public void BtnTryNo()
     {
