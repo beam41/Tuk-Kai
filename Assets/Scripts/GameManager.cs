@@ -5,11 +5,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     #region declare variable thing
-    private static GameManager instance = null;
-    public static GameManager Instance
-    {
-        get {return instance;}
-    }
+    public static GameManager Instance { get; private set; } = null;
     [Header("Ball Spawner")]
     public Transform ballKeeper;
     public GameObject theBall;
@@ -51,7 +47,7 @@ public class GameManager : MonoBehaviour
         #region Singleton Loader
         if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else if (Instance != this)
         {
@@ -59,11 +55,16 @@ public class GameManager : MonoBehaviour
         }
         #endregion
         StartCoroutine("Addball");
+        #if !(UNITY_ANDROID || UNITY_IOS)
         Cursor.visible = false;
+        #endif
     }
 
-    private void Update()
+    #if !(UNITY_ANDROID || UNITY_IOS)
+    void Update()
     {
+        
+    
         if (Input.GetButtonDown("Cancel"))
         {
             if (!exitCanvas.activeInHierarchy)
@@ -73,12 +74,12 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                exitCanvas.SetActive(false);
-                if (!openCanvas.activeInHierarchy && !selectCanvas.activeInHierarchy)
-                    blurry.SetActive(false);
+                BtnExitNo();
             }
         }
+        
     }
+    #endif
 
     IEnumerator Addball()
     {
@@ -87,13 +88,15 @@ public class GameManager : MonoBehaviour
             GameObject newBall = Instantiate(theBall, new Vector3(Random.Range(-4f,4f),4,Random.Range(-4f,4f)), Quaternion.identity, ballKeeper);
             ballCount++;
             #region random item
+            float rand = Random.value;
             for (int i = 0; i < possibleThingsChance.Length; i++)
             {
-                if (Random.value <= possibleThingsChance[i])
+                if (rand <= possibleThingsChance[i])
                 {
                     newBall.GetComponent<BallSelection>().inside = possibleThings[i];
                     break;
                 }
+                rand -= possibleThingsChance[i];
             }
             #endregion
             newBall.GetComponent<Renderer>().material.color = new Color(Random.Range(0f,1f),Random.Range(0f,1f),Random.Range(0f,1f));
@@ -129,6 +132,8 @@ public class GameManager : MonoBehaviour
     public void BtnExitNo()
     {
         exitCanvas.SetActive(false);
+        if (!openCanvas.activeInHierarchy && !selectCanvas.activeInHierarchy)
+            blurry.SetActive(false);
     }
 
     public void BtnExitYes()
@@ -145,4 +150,12 @@ public class GameManager : MonoBehaviour
     {
         exitCanvas.SetActive(true);
     }
+
+    #if UNITY_ANDROID || UNITY_IOS
+    public void BtnToExit()
+    {
+        exitCanvas.SetActive(true);
+        blurry.SetActive(true);
+    }
+    #endif
 }
