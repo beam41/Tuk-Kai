@@ -73,9 +73,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                exitCanvas.SetActive(false);
-                if (!openCanvas.activeInHierarchy && !selectCanvas.activeInHierarchy)
-                    blurry.SetActive(false);
+                BtnExitNo();
             }
         }
     }
@@ -129,6 +127,8 @@ public class GameManager : MonoBehaviour
     public void BtnExitNo()
     {
         exitCanvas.SetActive(false);
+        if (!openCanvas.activeInHierarchy && !selectCanvas.activeInHierarchy)
+            blurry.SetActive(false);
     }
 
     public void BtnExitYes()
