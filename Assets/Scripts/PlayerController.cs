@@ -31,10 +31,10 @@ public class PlayerController : MonoBehaviour
 
             #elif UNITY_ANDROID || UNITY_IOS
             
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, 
-                                                transform.eulerAngles.y + GameTouchManager.Instance.movementX * GameManager.Instance.turnSpeedY, 
-                                                transform.eulerAngles.z);
-            GameTouchManager.Instance.movementX = 0;
+            //transform.eulerAngles = new Vector3(transform.eulerAngles.x, 
+                                               // transform.eulerAngles.y + GameTouchManager.Instance.movementX * GameManager.Instance.turnSpeedY, 
+                                                // transform.eulerAngles.z);
+            //GameTouchManager.Instance.movementX = 0;
             #endif
         }
         #if !(UNITY_ANDROID || UNITY_IOS)

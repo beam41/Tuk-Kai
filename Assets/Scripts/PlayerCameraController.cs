@@ -14,8 +14,8 @@ public class PlayerCameraController : MonoBehaviour
 		    float mouseY = Input.GetAxisRaw("Mouse Y");
             transform.localEulerAngles = new Vector3(ClamperX(mouseY * GameManager.Instance.turnSpeedX), 0, 0);
             #elif UNITY_ANDROID || UNITY_IOS
-            transform.localEulerAngles = new Vector3(ClamperX(GameTouchManager.Instance.movementY * GameManager.Instance.turnSpeedX), 0, 0);
-            GameTouchManager.Instance.movementY = 0;
+            //transform.localEulerAngles = new Vector3(ClamperX(GameTouchManager.Instance.movementY * GameManager.Instance.turnSpeedX), 0, 0);
+            //GameTouchManager.Instance.movementY = 0;
             #endif
             #region Raycast
             RaycastHit hit;

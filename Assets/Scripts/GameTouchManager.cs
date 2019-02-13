@@ -70,4 +70,9 @@ public class GameTouchManager : MonoBehaviour
         }
         
     }
+
+    public void Pickup()
+    {
+        callPickup = true;
+    }
 }

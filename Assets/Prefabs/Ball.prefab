@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitting: 0
-  inside: Cat
+  inside: 
 --- !u!114 &702787542358307457
 MonoBehaviour:
   m_ObjectHideFlags: 0
